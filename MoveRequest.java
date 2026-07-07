@@ -1,6 +1,6 @@
 public final class MoveRequest {
 
-    public static final long MOVE_DURATION_MS = 1000;
+    public static final long MOVE_DURATION_MS = 2000;
 
     private final int fromRow;
     private final int fromCol;
