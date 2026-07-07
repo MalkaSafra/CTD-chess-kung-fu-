@@ -22,6 +22,17 @@ public abstract class Piece {
         return false;
     }
 
+    public boolean isValidMove(Board board, int startRow, int startCol, int endRow, int endCol) {
+        if (!isValidMoveShape(startCol, startRow, endCol, endRow)) {
+            return false;
+        }
+        if (requiresClearPath() && !board.isPathClear(startRow, startCol, endRow, endCol)) {
+            return false;
+        }
+        Piece destinationPiece = board.getPiece(endRow, endCol);
+        return destinationPiece == null || destinationPiece.getColor() != getColor();
+    }
+
     public static Piece fromToken(String token) {
         if (token.length() != 2) {
             throw new BoardParseException(ParseErrorCode.UNKNOWN_TOKEN, "Invalid piece token: " + token);
