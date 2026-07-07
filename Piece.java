@@ -18,11 +18,15 @@ public final class Piece {
 
     public static Piece fromToken(String token) {
         if (token.length() != 2) {
-            throw new IllegalArgumentException("Invalid piece token: " + token);
+            throw new BoardParseException(ParseErrorCode.UNKNOWN_TOKEN, "Invalid piece token: " + token);
         }
-        Color color = Color.fromCode(token.charAt(0));
-        PieceType type = PieceType.fromCode(token.charAt(1));
-        return new Piece(color, type);
+        try {
+            Color color = Color.fromCode(token.charAt(0));
+            PieceType type = PieceType.fromCode(token.charAt(1));
+            return new Piece(color, type);
+        } catch (IllegalArgumentException e) {
+            throw new BoardParseException(ParseErrorCode.UNKNOWN_TOKEN, "Invalid piece token: " + token);
+        }
     }
 
     @Override

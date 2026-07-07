@@ -5,7 +5,8 @@ import java.util.List;
 
 public final class BoardParser {
 
-    private static final String HEADER = "Board:";
+    private static final String BOARD_HEADER = "Board:";
+    private static final String COMMANDS_HEADER = "Commands:";
 
     private BoardParser() {
     }
@@ -21,14 +22,17 @@ public final class BoardParser {
                 }
                 continue;
             }
-            if (trimmed.equalsIgnoreCase(HEADER)) {
+            if (trimmed.equalsIgnoreCase(BOARD_HEADER)) {
                 continue;
+            }
+            if (trimmed.equalsIgnoreCase(COMMANDS_HEADER)) {
+                break;
             }
             rowLines.add(trimmed);
         }
 
         if (rowLines.isEmpty()) {
-            throw new IllegalArgumentException("No board rows found in input");
+            throw new BoardParseException(ParseErrorCode.EMPTY_BOARD, "No board rows found in input");
         }
 
         int cols = rowLines.get(0).split("\\s+").length;
@@ -38,7 +42,7 @@ public final class BoardParser {
         for (int r = 0; r < rows; r++) {
             String[] tokens = rowLines.get(r).split("\\s+");
             if (tokens.length != cols) {
-                throw new IllegalArgumentException(
+                throw new BoardParseException(ParseErrorCode.ROW_WIDTH_MISMATCH,
                         "Row " + r + " has " + tokens.length + " columns, expected " + cols);
             }
             for (int c = 0; c < cols; c++) {

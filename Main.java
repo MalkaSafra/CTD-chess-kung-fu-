@@ -8,7 +8,10 @@ public final class Main {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             Board board = BoardParser.parse(reader);
             System.out.println(board.toCanonicalString());
-        } catch (IOException | IllegalArgumentException e) {
+        } catch (BoardParseException e) {
+            System.out.println("ERROR " + e.getCode().name());
+            System.exit(1);
+        } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
             System.exit(1);
         }
