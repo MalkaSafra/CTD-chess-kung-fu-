@@ -58,3 +58,42 @@ public final class BoardParser {
         return new ParsedBoard(board, commandsSectionPresent);
     }
 }
+
+enum ParseErrorCode {
+    UNKNOWN_TOKEN,
+    ROW_WIDTH_MISMATCH,
+    EMPTY_BOARD
+}
+
+final class BoardParseException extends RuntimeException {
+
+    private final ParseErrorCode code;
+
+    BoardParseException(ParseErrorCode code, String message) {
+        super(message);
+        this.code = code;
+    }
+
+    public ParseErrorCode getCode() {
+        return code;
+    }
+}
+
+final class ParsedBoard {
+
+    private final Board board;
+    private final boolean commandsSectionPresent;
+
+    ParsedBoard(Board board, boolean commandsSectionPresent) {
+        this.board = board;
+        this.commandsSectionPresent = commandsSectionPresent;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public boolean isCommandsSectionPresent() {
+        return commandsSectionPresent;
+    }
+}

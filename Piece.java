@@ -55,3 +55,142 @@ public abstract class Piece {
         return "" + color.getCode() + type.getCode();
     }
 }
+
+enum Color {
+    WHITE('w'),
+    BLACK('b');
+
+    private final char code;
+
+    Color(char code) {
+        this.code = code;
+    }
+
+    public char getCode() {
+        return code;
+    }
+
+    public static Color fromCode(char code) {
+        for (Color color : values()) {
+            if (color.code == code) {
+                return color;
+            }
+        }
+        throw new IllegalArgumentException("Unknown color code: " + code);
+    }
+}
+
+enum PieceType {
+    KING('K'),
+    QUEEN('Q'),
+    ROOK('R'),
+    BISHOP('B'),
+    KNIGHT('N'),
+    PAWN('P');
+
+    private final char code;
+
+    PieceType(char code) {
+        this.code = code;
+    }
+
+    public char getCode() {
+        return code;
+    }
+
+    public static PieceType fromCode(char code) {
+        for (PieceType type : values()) {
+            if (type.code == code) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Unknown piece type code: " + code);
+    }
+}
+
+final class King extends Piece {
+
+    King(Color color) {
+        super(color, PieceType.KING);
+    }
+
+    @Override
+    public boolean isValidMoveShape(int startX, int startY, int endX, int endY) {
+        int dx = Math.abs(endX - startX);
+        int dy = Math.abs(endY - startY);
+        return (dx != 0 || dy != 0) && dx <= 1 && dy <= 1;
+    }
+}
+
+final class Queen extends Piece {
+
+    private final Rook rookShape;
+    private final Bishop bishopShape;
+
+    Queen(Color color) {
+        super(color, PieceType.QUEEN);
+        this.rookShape = new Rook(color);
+        this.bishopShape = new Bishop(color);
+    }
+
+    @Override
+    public boolean isValidMoveShape(int startX, int startY, int endX, int endY) {
+        return rookShape.isValidMoveShape(startX, startY, endX, endY)
+                || bishopShape.isValidMoveShape(startX, startY, endX, endY);
+    }
+}
+
+final class Rook extends Piece {
+
+    Rook(Color color) {
+        super(color, PieceType.ROOK);
+    }
+
+    @Override
+    public boolean isValidMoveShape(int startX, int startY, int endX, int endY) {
+        boolean sameX = startX == endX;
+        boolean sameY = startY == endY;
+        return sameX ^ sameY;
+    }
+}
+
+final class Bishop extends Piece {
+
+    Bishop(Color color) {
+        super(color, PieceType.BISHOP);
+    }
+
+    @Override
+    public boolean isValidMoveShape(int startX, int startY, int endX, int endY) {
+        int dx = Math.abs(endX - startX);
+        int dy = Math.abs(endY - startY);
+        return dx != 0 && dx == dy;
+    }
+}
+
+final class Knight extends Piece {
+
+    Knight(Color color) {
+        super(color, PieceType.KNIGHT);
+    }
+
+    @Override
+    public boolean isValidMoveShape(int startX, int startY, int endX, int endY) {
+        int dx = Math.abs(endX - startX);
+        int dy = Math.abs(endY - startY);
+        return (dx == 1 && dy == 2) || (dx == 2 && dy == 1);
+    }
+}
+
+final class Pawn extends Piece {
+
+    Pawn(Color color) {
+        super(color, PieceType.PAWN);
+    }
+
+    @Override
+    public boolean isValidMoveShape(int startX, int startY, int endX, int endY) {
+        // Pawn movement rules are out of scope for this iteration; no move is legal yet.
+        return false;
+    }
+}
