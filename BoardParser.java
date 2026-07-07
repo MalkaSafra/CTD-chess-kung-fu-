@@ -11,8 +11,9 @@ public final class BoardParser {
     private BoardParser() {
     }
 
-    public static Board parse(BufferedReader reader) throws IOException {
+    public static ParsedBoard parse(BufferedReader reader) throws IOException {
         List<String> rowLines = new ArrayList<>();
+        boolean commandsSectionPresent = false;
         String line;
         while ((line = reader.readLine()) != null) {
             String trimmed = line.trim();
@@ -26,6 +27,7 @@ public final class BoardParser {
                 continue;
             }
             if (trimmed.equalsIgnoreCase(COMMANDS_HEADER)) {
+                commandsSectionPresent = true;
                 break;
             }
             rowLines.add(trimmed);
@@ -53,6 +55,6 @@ public final class BoardParser {
             }
         }
 
-        return board;
+        return new ParsedBoard(board, commandsSectionPresent);
     }
 }

@@ -31,6 +31,15 @@ public final class Board {
         grid[row][col] = piece;
     }
 
+    public boolean isInBounds(int row, int col) {
+        return row >= 0 && row < rows && col >= 0 && col < cols;
+    }
+
+    public void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
+        grid[toRow][toCol] = grid[fromRow][fromCol];
+        grid[fromRow][fromCol] = null;
+    }
+
     public String toCanonicalString() {
         StringBuilder sb = new StringBuilder();
         for (int r = 0; r < rows; r++) {
