@@ -20,14 +20,33 @@ public final class SelectionManager {
             return Optional.empty();
         }
 
-        boolean legalShape = selection.getPiece().isValidMoveShape(selection.getCol(), selection.getRow(), col, row);
-        if (!legalShape) {
+        if (!isLegalMove(board, selection, row, col)) {
             return Optional.empty();
         }
 
         MoveRequest request = new MoveRequest(selection.getRow(), selection.getCol(), row, col, currentTimeMs);
         selection = null;
         return Optional.of(request);
+    }
+
+    private boolean isLegalMove(Board board, Selection selection, int row, int col) {
+        Piece piece = selection.getPiece();
+
+        boolean legalShape = piece.isValidMoveShape(selection.getCol(), selection.getRow(), col, row);
+        if (!legalShape) {
+            return false;
+        }
+
+        if (piece.requiresClearPath() && !board.isPathClear(selection.getRow(), selection.getCol(), row, col)) {
+            return false;
+        }
+
+        Piece destinationPiece = board.getPiece(row, col);
+        if (destinationPiece != null && destinationPiece.getColor() == piece.getColor()) {
+            return false;
+        }
+
+        return true;
     }
 }
 

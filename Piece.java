@@ -18,6 +18,10 @@ public abstract class Piece {
 
     public abstract boolean isValidMoveShape(int startX, int startY, int endX, int endY);
 
+    public boolean requiresClearPath() {
+        return false;
+    }
+
     public static Piece fromToken(String token) {
         if (token.length() != 2) {
             throw new BoardParseException(ParseErrorCode.UNKNOWN_TOKEN, "Invalid piece token: " + token);

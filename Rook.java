@@ -10,4 +10,9 @@ public final class Rook extends Piece {
         boolean sameY = startY == endY;
         return sameX ^ sameY;
     }
+
+    @Override
+    public boolean requiresClearPath() {
+        return true;
+    }
 }

@@ -10,4 +10,9 @@ public final class Bishop extends Piece {
         int dy = Math.abs(endY - startY);
         return dx != 0 && dx == dy;
     }
+
+    @Override
+    public boolean requiresClearPath() {
+        return true;
+    }
 }

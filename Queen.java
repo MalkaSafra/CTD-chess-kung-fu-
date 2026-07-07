@@ -14,4 +14,9 @@ public final class Queen extends Piece {
         return rookShape.isValidMoveShape(startX, startY, endX, endY)
                 || bishopShape.isValidMoveShape(startX, startY, endX, endY);
     }
+
+    @Override
+    public boolean requiresClearPath() {
+        return true;
+    }
 }

@@ -40,6 +40,21 @@ public final class Board {
         grid[fromRow][fromCol] = null;
     }
 
+    public boolean isPathClear(int startRow, int startCol, int endRow, int endCol) {
+        int rowStep = Integer.signum(endRow - startRow);
+        int colStep = Integer.signum(endCol - startCol);
+        int row = startRow + rowStep;
+        int col = startCol + colStep;
+        while (row != endRow || col != endCol) {
+            if (grid[row][col] != null) {
+                return false;
+            }
+            row += rowStep;
+            col += colStep;
+        }
+        return true;
+    }
+
     public String toCanonicalString() {
         StringBuilder sb = new StringBuilder();
         for (int r = 0; r < rows; r++) {
