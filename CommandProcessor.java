@@ -54,7 +54,8 @@ public final class CommandProcessor {
             return;
         }
 
-        Optional<MoveRequest> request = selectionManager.handleClick(board, row, col, clock.getElapsedMs());
+        moveQueue.processUpTo(clock.getElapsedMs(), board);
+        Optional<MoveRequest> request = selectionManager.handleClick(board, moveQueue, row, col, clock.getElapsedMs());
         request.ifPresent(moveQueue::enqueue);
         moveQueue.processUpTo(clock.getElapsedMs(), board);
     }

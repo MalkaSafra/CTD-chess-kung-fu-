@@ -18,4 +18,14 @@ public final class MoveRequestQueue {
             return true;
         });
     }
+
+    public boolean isLocked(int row, int col, long currentTimeMs) {
+        for (MoveRequest request : pending) {
+            if (request.getFromRow() == row && request.getFromCol() == col
+                    && currentTimeMs < request.getCompletesAtMs()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

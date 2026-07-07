@@ -4,11 +4,13 @@ public final class SelectionManager {
 
     private Selection selection;
 
-    public Optional<MoveRequest> handleClick(Board board, int row, int col, long currentTimeMs) {
+    public Optional<MoveRequest> handleClick(Board board, MoveRequestQueue moveQueue, int row, int col,
+            long currentTimeMs) {
         Piece clickedPiece = board.getPiece(row, col);
+        boolean clickedPieceLocked = clickedPiece != null && moveQueue.isLocked(row, col, currentTimeMs);
 
         if (selection == null) {
-            if (clickedPiece == null) {
+            if (clickedPiece == null || clickedPieceLocked) {
                 return Optional.empty();
             }
             selection = new Selection(row, col, clickedPiece);
@@ -16,6 +18,9 @@ public final class SelectionManager {
         }
 
         if (clickedPiece != null && clickedPiece.getColor() == selection.getPiece().getColor()) {
+            if (clickedPieceLocked) {
+                return Optional.empty();
+            }
             selection = new Selection(row, col, clickedPiece);
             return Optional.empty();
         }
