@@ -1,7 +1,6 @@
 public final class MoveRequest {
 
-    // Placeholder until per-piece movement speeds are defined; requests settle instantly for now.
-    private static final long DEFAULT_DURATION_MS = 0;
+    public static final long MOVE_DURATION_MS = 1000;
 
     private final int fromRow;
     private final int fromCol;
@@ -16,7 +15,7 @@ public final class MoveRequest {
         this.toRow = toRow;
         this.toCol = toCol;
         this.requestedAtMs = requestedAtMs;
-        this.completesAtMs = requestedAtMs + DEFAULT_DURATION_MS;
+        this.completesAtMs = requestedAtMs + MOVE_DURATION_MS;
     }
 
     public int getFromRow() {
