@@ -20,6 +20,11 @@ public final class SelectionManager {
             return Optional.empty();
         }
 
+        boolean legalShape = selection.getPiece().isValidMoveShape(selection.getCol(), selection.getRow(), col, row);
+        if (!legalShape) {
+            return Optional.empty();
+        }
+
         MoveRequest request = new MoveRequest(selection.getRow(), selection.getCol(), row, col, currentTimeMs);
         selection = null;
         return Optional.of(request);
