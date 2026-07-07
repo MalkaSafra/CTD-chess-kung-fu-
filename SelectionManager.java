@@ -30,7 +30,14 @@ public final class SelectionManager {
             return Optional.empty();
         }
 
-        MoveRequest request = new MoveRequest(selection.getRow(), selection.getCol(), row, col, currentTimeMs);
+        Color movingColor = selection.getPiece().getColor();
+        Color oppositeColor = movingColor == Color.WHITE ? Color.BLACK : Color.WHITE;
+        if (moveQueue.hasPendingMoveOfColor(oppositeColor, currentTimeMs)) {
+            return Optional.empty();
+        }
+
+        MoveRequest request = new MoveRequest(selection.getRow(), selection.getCol(), row, col, currentTimeMs,
+                movingColor);
         selection = null;
         return Optional.of(request);
     }

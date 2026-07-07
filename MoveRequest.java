@@ -1,6 +1,6 @@
 public final class MoveRequest {
 
-    public static final long MOVE_DURATION_MS = 2000;
+    public static final long MOVE_DURATION_PER_CELL_MS = 1000;
 
     private final int fromRow;
     private final int fromCol;
@@ -8,14 +8,17 @@ public final class MoveRequest {
     private final int toCol;
     private final long requestedAtMs;
     private final long completesAtMs;
+    private final Color color;
 
-    MoveRequest(int fromRow, int fromCol, int toRow, int toCol, long requestedAtMs) {
+    MoveRequest(int fromRow, int fromCol, int toRow, int toCol, long requestedAtMs, Color color) {
         this.fromRow = fromRow;
         this.fromCol = fromCol;
         this.toRow = toRow;
         this.toCol = toCol;
         this.requestedAtMs = requestedAtMs;
-        this.completesAtMs = requestedAtMs + MOVE_DURATION_MS;
+        this.color = color;
+        int distance = Math.max(Math.abs(toRow - fromRow), Math.abs(toCol - fromCol));
+        this.completesAtMs = requestedAtMs + distance * MOVE_DURATION_PER_CELL_MS;
     }
 
     public int getFromRow() {
@@ -40,5 +43,9 @@ public final class MoveRequest {
 
     public long getCompletesAtMs() {
         return completesAtMs;
+    }
+
+    public Color getColor() {
+        return color;
     }
 }

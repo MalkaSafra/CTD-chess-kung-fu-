@@ -28,4 +28,13 @@ public final class MoveRequestQueue {
         }
         return false;
     }
+
+    public boolean hasPendingMoveOfColor(Color color, long currentTimeMs) {
+        for (MoveRequest request : pending) {
+            if (request.getColor() == color && currentTimeMs < request.getCompletesAtMs()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
