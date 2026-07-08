@@ -1,3 +1,5 @@
+package com.kungfuchess.model;
+
 public final class King extends Piece {
 
     King(Color color) {

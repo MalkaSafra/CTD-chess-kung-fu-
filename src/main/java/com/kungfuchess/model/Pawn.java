@@ -1,3 +1,5 @@
+package com.kungfuchess.model;
+
 public final class Pawn extends Piece {
 
     Pawn(Color color) {

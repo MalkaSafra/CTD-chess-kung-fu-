@@ -1,9 +1,14 @@
+package com.kungfuchess;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import com.kungfuchess.model.Board;
+import com.kungfuchess.model.Piece;
 
 /**
  * Tests for each {@link Piece} subclass's geometric shape rule

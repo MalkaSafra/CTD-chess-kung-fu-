@@ -1,3 +1,5 @@
+package com.kungfuchess.model;
+
 public final class Bishop extends Piece {
 
     Bishop(Color color) {

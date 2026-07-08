@@ -1,3 +1,5 @@
+package com.kungfuchess.config;
+
 /**
  * Central home for values that describe how this specific game is tuned,
  * as opposed to values that define chess itself (e.g. a King's one-cell

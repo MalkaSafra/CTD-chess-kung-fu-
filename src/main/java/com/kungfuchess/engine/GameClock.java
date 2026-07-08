@@ -1,3 +1,5 @@
+package com.kungfuchess.engine;
+
 public final class GameClock {
 
     private long elapsedMs = 0;

@@ -1,5 +1,11 @@
+package com.kungfuchess.engine;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import com.kungfuchess.model.Board;
+import com.kungfuchess.model.MoveRequest;
+import com.kungfuchess.model.Piece;
 
 public final class MoveRequestQueue {
 

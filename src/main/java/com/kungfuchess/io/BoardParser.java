@@ -1,7 +1,13 @@
+package com.kungfuchess.io;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.kungfuchess.config.GameConfig;
+import com.kungfuchess.model.Board;
+import com.kungfuchess.model.Piece;
 
 /**
  * Reads the "Board:" / "Commands:" text fixture from a {@link BufferedReader} and
@@ -10,14 +16,14 @@ import java.util.List;
  * <p>This class owns the only knowledge of the input <em>syntax</em> in the whole
  * codebase; {@link Board} itself only knows about rows, columns, and {@link Piece}
  * placement, never about text formatting. A future {@code BinaryBoardParser} (or
- * any other format) could be introduced as a sibling class that decodes its own
- * input and calls the exact same {@code new Board(rows, cols)} /
+ * any other format) could be introduced as a sibling class in this same package
+ * that decodes its own input and calls the exact same {@code new Board(rows, cols)} /
  * {@code board.setPiece(...)} primitives used here, returning its own
- * {@link ParsedBoard}. Nothing downstream -- {@link Game}, which is the only
- * class {@link Main} hands the resulting {@link Board} to -- would need to
- * change, since {@code Game} never knows or cares how that {@code Board}
- * came to be populated; it only calls the same public {@code Board} API
- * regardless of which parser built it.
+ * {@link ParsedBoard}. Nothing downstream -- {@code com.kungfuchess.engine.Game},
+ * which is the only class {@code com.kungfuchess.ui.Main} hands the resulting
+ * {@link Board} to -- would need to change, since {@code Game} never knows or
+ * cares how that {@code Board} came to be populated; it only calls the same
+ * public {@code Board} API regardless of which parser built it.
  */
 public final class BoardParser {
 
@@ -69,44 +75,5 @@ public final class BoardParser {
         }
 
         return new ParsedBoard(board, commandsSectionPresent);
-    }
-}
-
-enum ParseErrorCode {
-    UNKNOWN_TOKEN,
-    ROW_WIDTH_MISMATCH,
-    EMPTY_BOARD
-}
-
-final class BoardParseException extends RuntimeException {
-
-    private final ParseErrorCode code;
-
-    BoardParseException(ParseErrorCode code, String message) {
-        super(message);
-        this.code = code;
-    }
-
-    public ParseErrorCode getCode() {
-        return code;
-    }
-}
-
-final class ParsedBoard {
-
-    private final Board board;
-    private final boolean commandsSectionPresent;
-
-    ParsedBoard(Board board, boolean commandsSectionPresent) {
-        this.board = board;
-        this.commandsSectionPresent = commandsSectionPresent;
-    }
-
-    public Board getBoard() {
-        return board;
-    }
-
-    public boolean isCommandsSectionPresent() {
-        return commandsSectionPresent;
     }
 }

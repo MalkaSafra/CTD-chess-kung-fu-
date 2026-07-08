@@ -1,3 +1,5 @@
+package com.kungfuchess.model;
+
 public final class Queen extends Piece {
 
     private final Rook rookShape;

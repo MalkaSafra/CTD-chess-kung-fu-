@@ -1,3 +1,5 @@
+package com.kungfuchess;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -14,6 +16,15 @@ import java.io.StringReader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import com.kungfuchess.config.GameConfig;
+import com.kungfuchess.engine.Game;
+import com.kungfuchess.io.BoardParseException;
+import com.kungfuchess.io.BoardParser;
+import com.kungfuchess.io.ParseErrorCode;
+import com.kungfuchess.io.ParsedBoard;
+import com.kungfuchess.model.Board;
+import com.kungfuchess.model.Piece;
 
 /**
  * Covers the two seams that sit above individual piece rules: {@link Game}'s

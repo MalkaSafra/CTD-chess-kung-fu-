@@ -1,6 +1,15 @@
+package com.kungfuchess.ui;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
+import com.kungfuchess.config.GameConfig;
+import com.kungfuchess.engine.Game;
+import com.kungfuchess.io.BoardParseException;
+import com.kungfuchess.io.BoardParser;
+import com.kungfuchess.io.ParsedBoard;
+import com.kungfuchess.model.Board;
 
 public final class Main {
 

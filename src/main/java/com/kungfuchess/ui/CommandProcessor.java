@@ -1,9 +1,14 @@
+package com.kungfuchess.ui;
+
+import com.kungfuchess.config.GameConfig;
+import com.kungfuchess.engine.Game;
+
 /**
  * Parses one command line at a time and delegates to {@link Game}'s API.
  *
  * <p>This class knows the text syntax of each command (its keyword and
  * argument count) and nothing about how the game itself works -- it never
- * touches a {@link Board}, a queue, or a clock directly. That split keeps
+ * touches a {@code Board}, a queue, or a clock directly. That split keeps
  * "how do we read a command" and "what does the game do with it" as two
  * independently changeable responsibilities.
  */

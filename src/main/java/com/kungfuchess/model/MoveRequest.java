@@ -1,3 +1,7 @@
+package com.kungfuchess.model;
+
+import com.kungfuchess.config.GameConfig;
+
 public final class MoveRequest {
 
     private final int fromRow;
@@ -7,7 +11,7 @@ public final class MoveRequest {
     private final long requestedAtMs;
     private final long completesAtMs;
 
-    MoveRequest(int fromRow, int fromCol, int toRow, int toCol, long requestedAtMs, boolean isCapture) {
+    public MoveRequest(int fromRow, int fromCol, int toRow, int toCol, long requestedAtMs, boolean isCapture) {
         this.fromRow = fromRow;
         this.fromCol = fromCol;
         this.toRow = toRow;

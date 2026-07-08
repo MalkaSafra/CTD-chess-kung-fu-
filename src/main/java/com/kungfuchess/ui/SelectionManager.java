@@ -1,4 +1,12 @@
+package com.kungfuchess.ui;
+
 import java.util.Optional;
+
+import com.kungfuchess.engine.MoveRequestQueue;
+import com.kungfuchess.model.Board;
+import com.kungfuchess.model.MoveRequest;
+import com.kungfuchess.model.Piece;
+import com.kungfuchess.model.Selection;
 
 public final class SelectionManager {
 

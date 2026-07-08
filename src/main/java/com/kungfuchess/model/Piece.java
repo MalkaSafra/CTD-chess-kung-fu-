@@ -1,15 +1,21 @@
+package com.kungfuchess.model;
+
+import com.kungfuchess.io.BoardParseException;
+import com.kungfuchess.io.ParseErrorCode;
+
 /**
  * Base type for every piece on the board. Movement legality is entirely
- * polymorphic: the one caller that checks it -- {@link SelectionManager},
- * reached indirectly through {@link Game} -- only ever invokes
- * {@link #isValidMove} through this reference, which in turn calls
- * {@link #isValidMoveShape} and {@link #requiresClearPath} on the same
- * concrete instance. Neither {@code SelectionManager} nor {@link Board} nor
- * {@link MoveRequestQueue} contains a type switch over piece kinds anywhere.
+ * polymorphic: the one caller that checks it -- {@code
+ * com.kungfuchess.ui.SelectionManager}, reached indirectly through {@code
+ * com.kungfuchess.engine.Game} -- only ever invokes {@link #isValidMove}
+ * through this reference, which in turn calls {@link #isValidMoveShape} and
+ * {@link #requiresClearPath} on the same concrete instance. Neither that
+ * caller, nor {@link Board}, nor {@code com.kungfuchess.engine.MoveRequestQueue}
+ * contains a type switch over piece kinds anywhere.
  *
- * <p>Adding a new piece today means adding one subclass that implements
- * those hooks; no other class in the engine needs to change. If movement
- * rules ever need to be defined outside compile-time Java (e.g. a
+ * <p>Adding a new piece today means adding one subclass in this package that
+ * implements those hooks; no other class in the engine needs to change. If
+ * movement rules ever need to be defined outside compile-time Java (e.g. a
  * user-authored config or script), the same hooks could be pulled out into
  * an injected {@code MovementStrategy} interface that a single concrete
  * {@code Piece} delegates to instead of subclassing -- a Strategy Pattern

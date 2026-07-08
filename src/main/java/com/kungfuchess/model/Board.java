@@ -1,3 +1,7 @@
+package com.kungfuchess.model;
+
+import com.kungfuchess.config.GameConfig;
+
 public final class Board {
 
     private final int rows;

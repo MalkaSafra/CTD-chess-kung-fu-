@@ -1,3 +1,5 @@
+package com.kungfuchess.model;
+
 public final class Rook extends Piece {
 
     Rook(Color color) {

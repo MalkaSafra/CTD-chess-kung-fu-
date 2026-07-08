@@ -1,15 +1,23 @@
+package com.kungfuchess.engine;
+
 import java.io.PrintStream;
 import java.util.Optional;
+
+import com.kungfuchess.io.CoordinateConverter;
+import com.kungfuchess.model.Board;
+import com.kungfuchess.model.MoveRequest;
+import com.kungfuchess.ui.SelectionManager;
 
 /**
  * Facade over a single game's live state and lifecycle.
  *
  * <p>Owns the {@link Board}, {@link GameClock}, {@link MoveRequestQueue}, and
  * {@link SelectionManager}, and is the only class that knows how those four
- * collaborators interact. Callers such as {@link CommandProcessor} never see
- * a row, a column, or a queue -- only pixel coordinates and millisecond
- * durations in, and a printed board out. That keeps command parsing and game
- * orchestration as two separate responsibilities in two separate classes.
+ * collaborators interact. Callers such as {@code com.kungfuchess.ui.CommandProcessor}
+ * never see a row, a column, or a queue -- only pixel coordinates and
+ * millisecond durations in, and a printed board out. That keeps command
+ * parsing and game orchestration as two separate responsibilities in two
+ * separate classes.
  */
 public final class Game {
 
@@ -60,19 +68,5 @@ public final class Game {
     public void printBoard() {
         moveQueue.processUpTo(clock.getElapsedMs(), board);
         out.println(board.toCanonicalString());
-    }
-}
-
-final class CoordinateConverter {
-
-    private CoordinateConverter() {
-    }
-
-    static int toRow(int y) {
-        return Math.floorDiv(y, GameConfig.CELL_SIZE_PX);
-    }
-
-    static int toCol(int x) {
-        return Math.floorDiv(x, GameConfig.CELL_SIZE_PX);
     }
 }
