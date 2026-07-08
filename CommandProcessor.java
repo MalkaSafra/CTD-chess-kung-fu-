@@ -24,6 +24,9 @@ public final class CommandProcessor {
             case "click":
                 handleClick(parts);
                 break;
+            case "jump":
+                handleJump(parts);
+                break;
             case "wait":
                 handleWait(parts);
                 break;
@@ -36,8 +39,34 @@ public final class CommandProcessor {
     }
 
     private void handleClick(String[] parts) {
-        if (parts.length < 3) {
+        int[] cell = parseCell(parts);
+        if (cell == null) {
             return;
+        }
+
+        moveQueue.processUpTo(clock.getElapsedMs(), board);
+        Optional<MoveRequest> request = selectionManager.handleClick(board, moveQueue, cell[0], cell[1],
+                clock.getElapsedMs());
+        request.ifPresent(moveQueue::enqueue);
+        moveQueue.processUpTo(clock.getElapsedMs(), board);
+    }
+
+    private void handleJump(String[] parts) {
+        int[] cell = parseCell(parts);
+        if (cell == null) {
+            return;
+        }
+
+        moveQueue.processUpTo(clock.getElapsedMs(), board);
+        Optional<MoveRequest> request = selectionManager.handleJumpCommand(board, moveQueue, cell[0], cell[1],
+                clock.getElapsedMs());
+        request.ifPresent(moveQueue::enqueue);
+        moveQueue.processUpTo(clock.getElapsedMs(), board);
+    }
+
+    private int[] parseCell(String[] parts) {
+        if (parts.length < 3) {
+            return null;
         }
         int x;
         int y;
@@ -45,19 +74,15 @@ public final class CommandProcessor {
             x = Integer.parseInt(parts[1]);
             y = Integer.parseInt(parts[2]);
         } catch (NumberFormatException e) {
-            return;
+            return null;
         }
 
         int row = CoordinateConverter.toRow(y);
         int col = CoordinateConverter.toCol(x);
         if (!board.isInBounds(row, col)) {
-            return;
+            return null;
         }
-
-        moveQueue.processUpTo(clock.getElapsedMs(), board);
-        Optional<MoveRequest> request = selectionManager.handleClick(board, moveQueue, row, col, clock.getElapsedMs());
-        request.ifPresent(moveQueue::enqueue);
-        moveQueue.processUpTo(clock.getElapsedMs(), board);
+        return new int[] { row, col };
     }
 
     private void handleWait(String[] parts) {

@@ -58,7 +58,7 @@ public final class MoveRequestQueue {
     public boolean isAirborneAt(int row, int col, long currentTimeMs) {
         for (MoveRequest request : pending) {
             if (request.isJump() && request.getFromRow() == row && request.getFromCol() == col
-                    && currentTimeMs < request.getCompletesAtMs()) {
+                    && currentTimeMs <= request.getCompletesAtMs()) {
                 return true;
             }
         }
