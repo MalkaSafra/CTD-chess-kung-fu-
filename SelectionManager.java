@@ -21,6 +21,13 @@ public final class SelectionManager {
             return Optional.empty();
         }
 
+        if (row == selection.getRow() && col == selection.getCol()) {
+            MoveRequest jumpRequest = new MoveRequest(row, col, row, col, currentTimeMs,
+                    selection.getPiece().getColor());
+            selection = null;
+            return Optional.of(jumpRequest);
+        }
+
         if (clickedPiece != null && clickedPiece.getColor() == selection.getPiece().getColor()) {
             if (clickedPieceLocked) {
                 return Optional.empty();

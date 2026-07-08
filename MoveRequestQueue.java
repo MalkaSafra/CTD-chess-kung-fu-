@@ -17,20 +17,31 @@ public final class MoveRequestQueue {
             if (request.getCompletesAtMs() > currentTimeMs) {
                 return false;
             }
-            settle(request, board);
+            settle(request, board, currentTimeMs);
             return true;
         });
     }
 
-    private void settle(MoveRequest request, Board board) {
+    private void settle(MoveRequest request, Board board, long currentTimeMs) {
+        if (request.isJump()) {
+            return;
+        }
+
         Piece movingPiece = board.getPiece(request.getFromRow(), request.getFromCol());
         if (movingPiece == null) {
             return;
         }
+
         Piece targetPiece = board.getPiece(request.getToRow(), request.getToCol());
         if (targetPiece != null && targetPiece.getColor() == movingPiece.getColor()) {
             return;
         }
+
+        if (targetPiece != null && isAirborneAt(request.getToRow(), request.getToCol(), currentTimeMs)) {
+            board.removePiece(request.getFromRow(), request.getFromCol());
+            return;
+        }
+
         board.movePiece(request.getFromRow(), request.getFromCol(), request.getToRow(), request.getToCol());
     }
 
@@ -44,9 +55,19 @@ public final class MoveRequestQueue {
         return false;
     }
 
+    public boolean isAirborneAt(int row, int col, long currentTimeMs) {
+        for (MoveRequest request : pending) {
+            if (request.isJump() && request.getFromRow() == row && request.getFromCol() == col
+                    && currentTimeMs < request.getCompletesAtMs()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean hasPendingMoveOfColor(Color color, long currentTimeMs) {
         for (MoveRequest request : pending) {
-            if (request.getColor() == color && currentTimeMs < request.getCompletesAtMs()) {
+            if (!request.isJump() && request.getColor() == color && currentTimeMs < request.getCompletesAtMs()) {
                 return true;
             }
         }

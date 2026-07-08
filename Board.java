@@ -38,10 +38,7 @@ public final class Board {
 
     public void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
         Piece moving = grid[fromRow][fromCol];
-        Piece captured = grid[toRow][toCol];
-        if (captured != null && captured.getType() == PieceType.KING) {
-            gameOver = true;
-        }
+        removePiece(toRow, toCol);
 
         if (moving.getType() == PieceType.PAWN && toRow == promotionRow(moving.getColor())) {
             moving = new Queen(moving.getColor());
@@ -49,6 +46,14 @@ public final class Board {
 
         grid[toRow][toCol] = moving;
         grid[fromRow][fromCol] = null;
+    }
+
+    public void removePiece(int row, int col) {
+        Piece captured = grid[row][col];
+        if (captured != null && captured.getType() == PieceType.KING) {
+            gameOver = true;
+        }
+        grid[row][col] = null;
     }
 
     private int promotionRow(Color color) {

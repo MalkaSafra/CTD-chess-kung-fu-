@@ -1,6 +1,7 @@
 public final class MoveRequest {
 
     public static final long MOVE_DURATION_PER_CELL_MS = 1000;
+    public static final long JUMP_DURATION_MS = 1000;
 
     private final int fromRow;
     private final int fromCol;
@@ -17,8 +18,16 @@ public final class MoveRequest {
         this.toCol = toCol;
         this.requestedAtMs = requestedAtMs;
         this.color = color;
-        int distance = Math.max(Math.abs(toRow - fromRow), Math.abs(toCol - fromCol));
-        this.completesAtMs = requestedAtMs + distance * MOVE_DURATION_PER_CELL_MS;
+        if (fromRow == toRow && fromCol == toCol) {
+            this.completesAtMs = requestedAtMs + JUMP_DURATION_MS;
+        } else {
+            int distance = Math.max(Math.abs(toRow - fromRow), Math.abs(toCol - fromCol));
+            this.completesAtMs = requestedAtMs + distance * MOVE_DURATION_PER_CELL_MS;
+        }
+    }
+
+    public boolean isJump() {
+        return fromRow == toRow && fromCol == toCol;
     }
 
     public int getFromRow() {
