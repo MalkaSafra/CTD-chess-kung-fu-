@@ -1,7 +1,5 @@
 public final class Board {
 
-    public static final String EMPTY_TOKEN = ".";
-
     private final int rows;
     private final int cols;
     private final Piece[][] grid;
@@ -87,7 +85,7 @@ public final class Board {
                     sb.append(' ');
                 }
                 Piece piece = grid[r][c];
-                sb.append(piece == null ? EMPTY_TOKEN : piece.toString());
+                sb.append(piece == null ? GameConfig.EMPTY_CELL_TOKEN : piece.toString());
             }
             if (r < rows - 1) {
                 sb.append('\n');

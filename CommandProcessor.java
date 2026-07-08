@@ -21,16 +21,16 @@ public final class CommandProcessor {
         }
         String[] parts = trimmed.split("\\s+");
         switch (parts[0].toLowerCase()) {
-            case "click":
+            case GameConfig.COMMAND_CLICK:
                 handleClick(parts);
                 break;
-            case "jump":
+            case GameConfig.COMMAND_JUMP:
                 handleJump(parts);
                 break;
-            case "wait":
+            case GameConfig.COMMAND_WAIT:
                 handleWait(parts);
                 break;
-            case "print":
+            case GameConfig.COMMAND_PRINT:
                 handlePrint(parts);
                 break;
             default:
@@ -100,7 +100,7 @@ public final class CommandProcessor {
     }
 
     private void handlePrint(String[] parts) {
-        if (parts.length < 2 || !parts[1].equalsIgnoreCase("board")) {
+        if (parts.length < 2 || !parts[1].equalsIgnoreCase(GameConfig.PRINT_ARG_BOARD)) {
             return;
         }
         moveQueue.processUpTo(clock.getElapsedMs(), board);

@@ -3,10 +3,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Reads the "Board:" / "Commands:" text fixture from a {@link BufferedReader} and
+ * produces a {@link ParsedBoard}.
+ *
+ * <p>This class owns the only knowledge of the input <em>syntax</em> in the whole
+ * codebase; {@link Board} itself only knows about rows, columns, and {@link Piece}
+ * placement, never about text formatting. A future {@code BinaryBoardParser} (or
+ * any other format) could be introduced as a sibling class that decodes its own
+ * input and calls the exact same {@code new Board(rows, cols)} /
+ * {@code board.setPiece(...)} primitives used here. Nothing downstream --
+ * {@link SelectionManager}, {@link MoveRequestQueue}, {@link CommandProcessor} --
+ * would need to change, since none of them know or care how the {@link Board}
+ * they were handed came to be populated.
+ */
 public final class BoardParser {
-
-    private static final String BOARD_HEADER = "Board:";
-    private static final String COMMANDS_HEADER = "Commands:";
 
     private BoardParser() {
     }
@@ -23,10 +34,10 @@ public final class BoardParser {
                 }
                 continue;
             }
-            if (trimmed.equalsIgnoreCase(BOARD_HEADER)) {
+            if (trimmed.equalsIgnoreCase(GameConfig.BOARD_HEADER)) {
                 continue;
             }
-            if (trimmed.equalsIgnoreCase(COMMANDS_HEADER)) {
+            if (trimmed.equalsIgnoreCase(GameConfig.COMMANDS_HEADER)) {
                 commandsSectionPresent = true;
                 break;
             }
@@ -49,7 +60,7 @@ public final class BoardParser {
             }
             for (int c = 0; c < cols; c++) {
                 String token = tokens[c];
-                if (!token.equals(Board.EMPTY_TOKEN)) {
+                if (!token.equals(GameConfig.EMPTY_CELL_TOKEN)) {
                     board.setPiece(r, c, Piece.fromToken(token));
                 }
             }

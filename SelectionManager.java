@@ -72,16 +72,14 @@ public final class SelectionManager {
 
 final class CoordinateConverter {
 
-    static final int CELL_SIZE_PX = 100;
-
     private CoordinateConverter() {
     }
 
     static int toRow(int y) {
-        return Math.floorDiv(y, CELL_SIZE_PX);
+        return Math.floorDiv(y, GameConfig.CELL_SIZE_PX);
     }
 
     static int toCol(int x) {
-        return Math.floorDiv(x, CELL_SIZE_PX);
+        return Math.floorDiv(x, GameConfig.CELL_SIZE_PX);
     }
 }

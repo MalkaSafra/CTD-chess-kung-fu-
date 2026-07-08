@@ -1,9 +1,5 @@
 public final class MoveRequest {
 
-    public static final long MOVE_DURATION_PER_CELL_MS = 1000;
-    public static final long JUMP_DURATION_MS = 1000;
-    public static final long CAPTURE_DURATION_MS = 1000;
-
     private final int fromRow;
     private final int fromCol;
     private final int toRow;
@@ -21,12 +17,12 @@ public final class MoveRequest {
         this.requestedAtMs = requestedAtMs;
         this.color = color;
         if (fromRow == toRow && fromCol == toCol) {
-            this.completesAtMs = requestedAtMs + JUMP_DURATION_MS;
+            this.completesAtMs = requestedAtMs + GameConfig.JUMP_DURATION_MS;
         } else if (isCapture) {
-            this.completesAtMs = requestedAtMs + CAPTURE_DURATION_MS;
+            this.completesAtMs = requestedAtMs + GameConfig.CAPTURE_DURATION_MS;
         } else {
             int distance = Math.max(Math.abs(toRow - fromRow), Math.abs(toCol - fromCol));
-            this.completesAtMs = requestedAtMs + distance * MOVE_DURATION_PER_CELL_MS;
+            this.completesAtMs = requestedAtMs + distance * GameConfig.MOVE_DURATION_PER_CELL_MS;
         }
     }
 
