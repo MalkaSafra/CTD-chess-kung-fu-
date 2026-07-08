@@ -37,12 +37,22 @@ public final class Board {
     }
 
     public void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
+        Piece moving = grid[fromRow][fromCol];
         Piece captured = grid[toRow][toCol];
         if (captured != null && captured.getType() == PieceType.KING) {
             gameOver = true;
         }
-        grid[toRow][toCol] = grid[fromRow][fromCol];
+
+        if (moving.getType() == PieceType.PAWN && toRow == promotionRow(moving.getColor())) {
+            moving = new Queen(moving.getColor());
+        }
+
+        grid[toRow][toCol] = moving;
         grid[fromRow][fromCol] = null;
+    }
+
+    private int promotionRow(Color color) {
+        return color == Color.WHITE ? 0 : rows - 1;
     }
 
     public boolean isGameOver() {

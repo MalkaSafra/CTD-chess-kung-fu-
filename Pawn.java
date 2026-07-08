@@ -9,7 +9,9 @@ public final class Pawn extends Piece {
         int direction = getColor() == Color.WHITE ? -1 : 1;
         int rowDelta = endY - startY;
         int colDelta = Math.abs(endX - startX);
-        return rowDelta == direction && colDelta <= 1;
+        boolean singleStep = rowDelta == direction && colDelta <= 1;
+        boolean doubleStep = rowDelta == 2 * direction && colDelta == 0;
+        return singleStep || doubleStep;
     }
 
     @Override
@@ -18,9 +20,18 @@ public final class Pawn extends Piece {
             return false;
         }
 
+        int direction = getColor() == Color.WHITE ? -1 : 1;
+        int rowDelta = endRow - startRow;
         Piece destinationPiece = board.getPiece(endRow, endCol);
-        boolean movingStraight = endCol == startCol;
 
+        if (rowDelta == 2 * direction) {
+            int initialRow = getColor() == Color.WHITE ? board.getRows() - 2 : 1;
+            return startRow == initialRow
+                    && board.isPathClear(startRow, startCol, endRow, endCol)
+                    && destinationPiece == null;
+        }
+
+        boolean movingStraight = endCol == startCol;
         if (movingStraight) {
             return destinationPiece == null;
         }
