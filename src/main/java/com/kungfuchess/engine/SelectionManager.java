@@ -1,8 +1,7 @@
-package com.kungfuchess.ui;
+package com.kungfuchess.engine;
 
 import java.util.Optional;
 
-import com.kungfuchess.engine.MoveRequestQueue;
 import com.kungfuchess.model.Board;
 import com.kungfuchess.model.MoveRequest;
 import com.kungfuchess.model.Piece;

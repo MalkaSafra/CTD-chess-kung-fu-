@@ -6,7 +6,6 @@ import java.util.Optional;
 import com.kungfuchess.io.CoordinateConverter;
 import com.kungfuchess.model.Board;
 import com.kungfuchess.model.MoveRequest;
-import com.kungfuchess.ui.SelectionManager;
 
 /**
  * Facade over a single game's live state and lifecycle.

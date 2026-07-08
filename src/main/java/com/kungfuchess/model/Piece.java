@@ -6,7 +6,7 @@ import com.kungfuchess.io.ParseErrorCode;
 /**
  * Base type for every piece on the board. Movement legality is entirely
  * polymorphic: the one caller that checks it -- {@code
- * com.kungfuchess.ui.SelectionManager}, reached indirectly through {@code
+ * com.kungfuchess.engine.SelectionManager}, reached indirectly through {@code
  * com.kungfuchess.engine.Game} -- only ever invokes {@link #isValidMove}
  * through this reference, which in turn calls {@link #isValidMoveShape} and
  * {@link #requiresClearPath} on the same concrete instance. Neither that
