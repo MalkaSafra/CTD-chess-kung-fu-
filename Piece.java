@@ -1,19 +1,20 @@
 /**
  * Base type for every piece on the board. Movement legality is entirely
- * polymorphic: {@link Board}, {@link SelectionManager}, and
- * {@link MoveRequestQueue} only ever call {@link #isValidMoveShape},
- * {@link #requiresClearPath}, and {@link #isValidMove} through this
- * reference -- none of them contain a type switch over piece kinds.
+ * polymorphic: the one caller that checks it -- {@link SelectionManager},
+ * reached indirectly through {@link Game} -- only ever invokes
+ * {@link #isValidMove} through this reference, which in turn calls
+ * {@link #isValidMoveShape} and {@link #requiresClearPath} on the same
+ * concrete instance. Neither {@code SelectionManager} nor {@link Board} nor
+ * {@link MoveRequestQueue} contains a type switch over piece kinds anywhere.
  *
  * <p>Adding a new piece today means adding one subclass that implements
- * those three hooks; no other class in the engine needs to change. If
- * movement rules ever need to be defined outside compile-time Java (e.g. a
- * user-authored config or script), the same three hooks could be pulled out
- * into an injected {@code MovementStrategy} interface that a single
- * concrete {@code Piece} delegates to instead of subclassing -- a Strategy
- * Pattern swap that only touches this class, since every caller already
- * depends solely on the {@code Piece} contract above, not on any specific
- * subclass.
+ * those hooks; no other class in the engine needs to change. If movement
+ * rules ever need to be defined outside compile-time Java (e.g. a
+ * user-authored config or script), the same hooks could be pulled out into
+ * an injected {@code MovementStrategy} interface that a single concrete
+ * {@code Piece} delegates to instead of subclassing -- a Strategy Pattern
+ * swap that only touches this class, since every caller already depends
+ * solely on the {@code Piece} contract above, not on any specific subclass.
  */
 public abstract class Piece {
 

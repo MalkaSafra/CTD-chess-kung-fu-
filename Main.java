@@ -9,7 +9,8 @@ public final class Main {
             ParsedBoard parsed = BoardParser.parse(reader);
             Board board = parsed.getBoard();
             if (parsed.isCommandsSectionPresent()) {
-                CommandProcessor processor = new CommandProcessor(board, System.out);
+                Game game = new Game(board, System.out);
+                CommandProcessor processor = new CommandProcessor(game);
                 String line;
                 while ((line = reader.readLine()) != null) {
                     processor.process(line);
@@ -18,10 +19,10 @@ public final class Main {
                 System.out.println(board.toCanonicalString());
             }
         } catch (BoardParseException e) {
-            System.out.println("ERROR " + e.getCode().name());
+            System.out.println(GameConfig.ERROR_OUTPUT_PREFIX + e.getCode().name());
             System.exit(1);
         } catch (IOException e) {
-            System.err.println("Error: " + e.getMessage());
+            System.err.println(GameConfig.IO_ERROR_PREFIX + e.getMessage());
             System.exit(1);
         }
     }

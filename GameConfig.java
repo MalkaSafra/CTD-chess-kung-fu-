@@ -47,4 +47,10 @@ public final class GameConfig {
 
     /** Argument required after {@link #COMMAND_PRINT} to print the canonical board. */
     public static final String PRINT_ARG_BOARD = "board";
+
+    /** Prefix for the single-line VPL-facing error output, followed by a {@code ParseErrorCode} name. */
+    public static final String ERROR_OUTPUT_PREFIX = "ERROR ";
+
+    /** Prefix for the internal, stderr-only I/O failure message (never seen by VPL). */
+    public static final String IO_ERROR_PREFIX = "Error: ";
 }

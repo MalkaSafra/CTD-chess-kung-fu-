@@ -6,16 +6,13 @@ public final class MoveRequest {
     private final int toCol;
     private final long requestedAtMs;
     private final long completesAtMs;
-    private final Color color;
 
-    MoveRequest(int fromRow, int fromCol, int toRow, int toCol, long requestedAtMs, Color color,
-            boolean isCapture) {
+    MoveRequest(int fromRow, int fromCol, int toRow, int toCol, long requestedAtMs, boolean isCapture) {
         this.fromRow = fromRow;
         this.fromCol = fromCol;
         this.toRow = toRow;
         this.toCol = toCol;
         this.requestedAtMs = requestedAtMs;
-        this.color = color;
         if (fromRow == toRow && fromCol == toCol) {
             this.completesAtMs = requestedAtMs + GameConfig.JUMP_DURATION_MS;
         } else if (isCapture) {
@@ -52,9 +49,5 @@ public final class MoveRequest {
 
     public long getCompletesAtMs() {
         return completesAtMs;
-    }
-
-    public Color getColor() {
-        return color;
     }
 }

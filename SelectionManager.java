@@ -22,8 +22,7 @@ public final class SelectionManager {
         }
 
         if (row == selection.getRow() && col == selection.getCol()) {
-            MoveRequest jumpRequest = new MoveRequest(row, col, row, col, currentTimeMs,
-                    selection.getPiece().getColor(), false);
+            MoveRequest jumpRequest = new MoveRequest(row, col, row, col, currentTimeMs, false);
             selection = null;
             return Optional.of(jumpRequest);
         }
@@ -41,15 +40,9 @@ public final class SelectionManager {
             return Optional.empty();
         }
 
-        Color movingColor = selection.getPiece().getColor();
-        Color oppositeColor = movingColor == Color.WHITE ? Color.BLACK : Color.WHITE;
-        if (moveQueue.hasPendingMoveOfColor(oppositeColor, currentTimeMs)) {
-            return Optional.empty();
-        }
-
         boolean isCapture = clickedPiece != null;
         MoveRequest request = new MoveRequest(selection.getRow(), selection.getCol(), row, col, currentTimeMs,
-                movingColor, isCapture);
+                isCapture);
         selection = null;
         return Optional.of(request);
     }
@@ -66,20 +59,6 @@ public final class SelectionManager {
         }
 
         selection = null;
-        return Optional.of(new MoveRequest(row, col, row, col, currentTimeMs, piece.getColor(), false));
-    }
-}
-
-final class CoordinateConverter {
-
-    private CoordinateConverter() {
-    }
-
-    static int toRow(int y) {
-        return Math.floorDiv(y, GameConfig.CELL_SIZE_PX);
-    }
-
-    static int toCol(int x) {
-        return Math.floorDiv(x, GameConfig.CELL_SIZE_PX);
+        return Optional.of(new MoveRequest(row, col, row, col, currentTimeMs, false));
     }
 }

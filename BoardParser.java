@@ -12,10 +12,12 @@ import java.util.List;
  * placement, never about text formatting. A future {@code BinaryBoardParser} (or
  * any other format) could be introduced as a sibling class that decodes its own
  * input and calls the exact same {@code new Board(rows, cols)} /
- * {@code board.setPiece(...)} primitives used here. Nothing downstream --
- * {@link SelectionManager}, {@link MoveRequestQueue}, {@link CommandProcessor} --
- * would need to change, since none of them know or care how the {@link Board}
- * they were handed came to be populated.
+ * {@code board.setPiece(...)} primitives used here, returning its own
+ * {@link ParsedBoard}. Nothing downstream -- {@link Game}, which is the only
+ * class {@link Main} hands the resulting {@link Board} to -- would need to
+ * change, since {@code Game} never knows or cares how that {@code Board}
+ * came to be populated; it only calls the same public {@code Board} API
+ * regardless of which parser built it.
  */
 public final class BoardParser {
 
