@@ -25,7 +25,7 @@ public final class Pawn extends Piece {
         Piece destinationPiece = board.getPiece(endRow, endCol);
 
         if (rowDelta == 2 * direction) {
-            int initialRow = getColor() == Color.WHITE ? board.getRows() - 2 : 1;
+            int initialRow = getColor() == Color.WHITE ? board.getRows() - 1 : 0;
             return startRow == initialRow
                     && board.isPathClear(startRow, startCol, endRow, endCol)
                     && destinationPiece == null;
