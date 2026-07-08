@@ -5,6 +5,7 @@ public final class Board {
     private final int rows;
     private final int cols;
     private final Piece[][] grid;
+    private boolean gameOver = false;
 
     public Board(int rows, int cols) {
         if (rows <= 0 || cols <= 0) {
@@ -36,8 +37,16 @@ public final class Board {
     }
 
     public void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
+        Piece captured = grid[toRow][toCol];
+        if (captured != null && captured.getType() == PieceType.KING) {
+            gameOver = true;
+        }
         grid[toRow][toCol] = grid[fromRow][fromCol];
         grid[fromRow][fromCol] = null;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
     }
 
     public boolean isPathClear(int startRow, int startCol, int endRow, int endCol) {

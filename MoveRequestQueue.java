@@ -11,6 +11,9 @@ public final class MoveRequestQueue {
 
     public void processUpTo(long currentTimeMs, Board board) {
         pending.removeIf(request -> {
+            if (board.isGameOver()) {
+                return true;
+            }
             if (request.getCompletesAtMs() > currentTimeMs) {
                 return false;
             }

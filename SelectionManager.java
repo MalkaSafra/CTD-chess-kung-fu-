@@ -6,6 +6,10 @@ public final class SelectionManager {
 
     public Optional<MoveRequest> handleClick(Board board, MoveRequestQueue moveQueue, int row, int col,
             long currentTimeMs) {
+        if (board.isGameOver()) {
+            return Optional.empty();
+        }
+
         Piece clickedPiece = board.getPiece(row, col);
         boolean clickedPieceLocked = clickedPiece != null && moveQueue.isLocked(row, col, currentTimeMs);
 
