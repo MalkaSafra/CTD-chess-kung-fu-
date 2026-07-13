@@ -132,4 +132,45 @@ class GameEngineTest {
         assertNull(board.getPiece(new Position(7, 6)));
         assertNull(board.getPiece(new Position(7, 7)));
     }
+
+    @Test
+    void simultaneousSwapCaptureAwardsTheWinToWhicheverSideMovedFirst_whiteFirst() {
+        // Two rooks facing off on a 1x4 board, each attacking the other's square at the exact
+        // same instant (both are fixed-duration capture motions started in the same tick).
+        // White requested its capture first, so white should be the survivor at (0, 3), and
+        // black's own in-flight "arrival" at (0, 0) must be discarded rather than completed --
+        // otherwise the already-captured black piece gets resurrected there.
+        Board board = new Board(1, 4);
+        place(board, PieceColor.WHITE, PieceKind.ROOK, new Position(0, 0));
+        place(board, PieceColor.BLACK, PieceKind.ROOK, new Position(0, 3));
+        GameEngine engine = newEngine(board);
+
+        engine.requestMove(new Position(0, 0), new Position(0, 3));
+        engine.requestMove(new Position(0, 3), new Position(0, 0));
+
+        engine.waitClock(3000);
+
+        Piece survivor = board.getPiece(new Position(0, 3));
+        assertEquals(PieceKind.ROOK, survivor.getKind());
+        assertEquals(PieceColor.WHITE, survivor.getColor(), "white requested the swap-capture first and should win it");
+        assertNull(board.getPiece(new Position(0, 0)), "the loser's square must stay empty, not be re-occupied by the captured piece");
+    }
+
+    @Test
+    void simultaneousSwapCaptureAwardsTheWinToWhicheverSideMovedFirst_blackFirst() {
+        Board board = new Board(1, 4);
+        place(board, PieceColor.WHITE, PieceKind.ROOK, new Position(0, 0));
+        place(board, PieceColor.BLACK, PieceKind.ROOK, new Position(0, 3));
+        GameEngine engine = newEngine(board);
+
+        engine.requestMove(new Position(0, 3), new Position(0, 0));
+        engine.requestMove(new Position(0, 0), new Position(0, 3));
+
+        engine.waitClock(3000);
+
+        Piece survivor = board.getPiece(new Position(0, 0));
+        assertEquals(PieceKind.ROOK, survivor.getKind());
+        assertEquals(PieceColor.BLACK, survivor.getColor(), "black requested the swap-capture first and should win it");
+        assertNull(board.getPiece(new Position(0, 3)), "the loser's square must stay empty, not be re-occupied by the captured piece");
+    }
 }

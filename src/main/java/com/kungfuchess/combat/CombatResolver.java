@@ -8,6 +8,7 @@ import com.kungfuchess.model.Position;
 import com.kungfuchess.rules.PieceRules;
 import com.kungfuchess.rules.PromotionRule;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -65,17 +66,35 @@ public final class CombatResolver {
      * caller happens to list them in.
      */
     public boolean resolveContestedArrival(Board board, Position destination, List<Arrival> arrivals) {
+        List<Arrival> pending = withoutAlreadyCaptured(arrivals);
+        if (pending.isEmpty()) {
+            // Every mover heading here was already captured while resolving a different
+            // destination earlier in this same tick -- e.g. two enemies simultaneously trading
+            // captures by swapping squares. There is no one left to complete this arrival.
+            return false;
+        }
+
         Piece defender = board.getPiece(destination);
 
         if (defender != null && defender.getState() == PieceState.JUMPING) {
-            return resolveAgainstAirborneDefender(board, arrivals, defender);
+            return resolveAgainstAirborneDefender(board, pending, defender);
         }
 
-        if (arrivals.size() == 1) {
-            return completeSingleArrival(board, arrivals.get(0), destination, defender);
+        if (pending.size() == 1) {
+            return completeSingleArrival(board, pending.get(0), destination, defender);
         }
 
-        return resolveLaterEatsEarlier(board, destination, arrivals, defender);
+        return resolveLaterEatsEarlier(board, destination, pending, defender);
+    }
+
+    private List<Arrival> withoutAlreadyCaptured(List<Arrival> arrivals) {
+        List<Arrival> pending = new ArrayList<>();
+        for (Arrival arrival : arrivals) {
+            if (arrival.getPiece().getState() != PieceState.CAPTURED) {
+                pending.add(arrival);
+            }
+        }
+        return pending;
     }
 
     /**
