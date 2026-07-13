@@ -1,10 +1,10 @@
-package com.kungfuchess.io;
+package com.kungfuchess.input;
 
 import com.kungfuchess.config.GameConfig;
 
-public final class CoordinateConverter {
+public final class BoardMapper {
 
-    private CoordinateConverter() {
+    private BoardMapper() {
     }
 
     public static int toRow(int y) {

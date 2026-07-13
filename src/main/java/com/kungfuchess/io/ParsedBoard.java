@@ -2,7 +2,7 @@ package com.kungfuchess.io;
 
 import com.kungfuchess.model.Board;
 
-public final class ParsedBoard {
+public class ParsedBoard {
 
     private final Board board;
     private final boolean commandsSectionPresent;

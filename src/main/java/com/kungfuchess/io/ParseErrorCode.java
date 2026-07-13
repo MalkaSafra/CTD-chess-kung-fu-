@@ -1,7 +1,7 @@
 package com.kungfuchess.io;
 
 public enum ParseErrorCode {
-    UNKNOWN_TOKEN,
+    EMPTY_BOARD,
     ROW_WIDTH_MISMATCH,
-    EMPTY_BOARD
+    UNKNOWN_TOKEN
 }

@@ -1,6 +1,6 @@
 package com.kungfuchess.io;
 
-public final class BoardParseException extends RuntimeException {
+public class BoardParseException extends RuntimeException {
 
     private final ParseErrorCode code;
 
