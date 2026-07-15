@@ -33,16 +33,12 @@ class RookRuleTest {
         Set<Position> destinations = PieceRules.getLegalDestinations(board, rook);
 
         assertEquals(14, destinations.size());
-        // up column
         assertTrue(destinations.contains(new Position(0, 4)));
         assertTrue(destinations.contains(new Position(3, 4)));
-        // down column
         assertTrue(destinations.contains(new Position(7, 4)));
         assertTrue(destinations.contains(new Position(5, 4)));
-        // left row
         assertTrue(destinations.contains(new Position(4, 0)));
         assertTrue(destinations.contains(new Position(4, 3)));
-        // right row
         assertTrue(destinations.contains(new Position(4, 7)));
         assertTrue(destinations.contains(new Position(4, 5)));
     }

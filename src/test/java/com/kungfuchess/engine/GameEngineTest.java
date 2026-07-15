@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import com.kungfuchess.config.GameConfig;
 import com.kungfuchess.model.Board;
 import com.kungfuchess.model.GameState;
 import com.kungfuchess.model.Piece;
@@ -172,5 +173,57 @@ class GameEngineTest {
         assertEquals(PieceKind.ROOK, survivor.getKind());
         assertEquals(PieceColor.BLACK, survivor.getColor(), "black requested the swap-capture first and should win it");
         assertNull(board.getPiece(new Position(0, 3)), "the loser's square must stay empty, not be re-occupied by the captured piece");
+    }
+
+    @Test
+    void pawnReachingTheBackRankIsPromotedToQueenAfterItArrives() {
+        Board board = new Board(8, 8);
+        place(board, PieceColor.WHITE, PieceKind.PAWN, new Position(1, 0));
+        GameEngine engine = newEngine(board);
+
+        engine.requestMove(new Position(1, 0), new Position(0, 0));
+        engine.waitClock(1000);
+
+        Piece promoted = board.getPiece(new Position(0, 0));
+        assertEquals(PieceKind.QUEEN, promoted.getKind());
+        assertEquals(PieceColor.WHITE, promoted.getColor());
+    }
+
+    @Test
+    void pieceRestsAfterCompletingAMoveAndCanActOnceRestExpires() {
+        Board board = new Board(8, 8);
+        place(board, PieceColor.WHITE, PieceKind.ROOK, new Position(7, 0));
+        GameEngine engine = newEngine(board);
+
+        engine.requestMove(new Position(7, 0), new Position(7, 1)); // 1 cell -> 1000ms
+        engine.waitClock(1000); // arrives, enters LONG_REST
+
+        MoveOutcome tooSoon = engine.requestMove(new Position(7, 1), new Position(7, 2));
+        assertFalse(tooSoon.isAccepted());
+        assertEquals(MoveRejection.PIECE_RESTING, tooSoon.getReason());
+
+        engine.waitClock(GameConfig.LONG_REST_DURATION_MS);
+
+        MoveOutcome afterRest = engine.requestMove(new Position(7, 1), new Position(7, 2));
+        assertTrue(afterRest.isAccepted());
+    }
+
+    @Test
+    void pieceRestsAfterLandingAJumpAndCanActOnceRestExpires() {
+        Board board = new Board(8, 8);
+        place(board, PieceColor.WHITE, PieceKind.ROOK, new Position(7, 0));
+        GameEngine engine = newEngine(board);
+
+        engine.requestJump(new Position(7, 0));
+        engine.waitClock(GameConfig.JUMP_DURATION_MS); // lands, enters SHORT_REST
+
+        MoveOutcome tooSoon = engine.requestMove(new Position(7, 0), new Position(7, 1));
+        assertFalse(tooSoon.isAccepted());
+        assertEquals(MoveRejection.PIECE_RESTING, tooSoon.getReason());
+
+        engine.waitClock(GameConfig.SHORT_REST_DURATION_MS);
+
+        MoveOutcome afterRest = engine.requestMove(new Position(7, 0), new Position(7, 1));
+        assertTrue(afterRest.isAccepted());
     }
 }

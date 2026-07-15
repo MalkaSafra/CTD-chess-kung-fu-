@@ -6,7 +6,9 @@ import com.kungfuchess.model.Piece;
 import com.kungfuchess.model.PieceColor;
 import com.kungfuchess.model.PieceState;
 import com.kungfuchess.model.Position;
+import com.kungfuchess.combat.CaptureLedger;
 import com.kungfuchess.combat.CombatResolver;
+import com.kungfuchess.combat.RestTracker;
 import com.kungfuchess.rules.PieceRules;
 
 import java.util.ArrayList;
@@ -18,7 +20,10 @@ import java.util.Map;
 public class RealTimeArbiter {
 
     private final List<Motion> activeMotions = new ArrayList<>();
-    private final CombatResolver combatResolver = new CombatResolver();
+    private final RestTracker restTracker = new RestTracker();
+    private final CaptureLedger captureLedger = new CaptureLedger();
+    private final CombatResolver combatResolver = new CombatResolver(restTracker, captureLedger);
+    private long totalElapsedMs;
 
     public boolean hasActiveMotion() {
         return !activeMotions.isEmpty();
@@ -26,6 +31,42 @@ public class RealTimeArbiter {
 
     public boolean isPieceMoving(Piece piece) {
         return piece.getState() == PieceState.MOVING || piece.getState() == PieceState.JUMPING;
+    }
+
+    public boolean isPieceResting(Piece piece) {
+        return restTracker.isResting(piece);
+    }
+
+    public long getRestRemainingMs(Piece piece) {
+        return restTracker.getRemainingMs(piece);
+    }
+
+    public int getScore(PieceColor color) {
+        return captureLedger.getScore(color);
+    }
+
+    /** The color whose king has been captured, or {@code null} if the game isn't over. */
+    public PieceColor getWinner() {
+        return captureLedger.getWinner();
+    }
+
+    /**
+     * Total real time the game clock has advanced since this arbiter was created. Used to phase
+     * an IDLE piece's looping breathing animation, which -- unlike a move, jump, or rest -- has no
+     * single moment it "began," so there is nothing else to time it against.
+     */
+    public long getTotalElapsedMs() {
+        return totalElapsedMs;
+    }
+
+    /** The in-flight {@link Motion} for {@code piece}, or {@code null} if it isn't moving/jumping. */
+    public Motion getActiveMotion(Piece piece) {
+        for (Motion motion : activeMotions) {
+            if (motion.getPiece() == piece) {
+                return motion;
+            }
+        }
+        return null;
     }
 
     public boolean isDestinationTargetedByColor(Position destination, PieceColor color) {
@@ -59,7 +100,13 @@ public class RealTimeArbiter {
     }
 
     public boolean advanceTime(long ms, Board board) {
+        totalElapsedMs += ms;
         activeMotions.removeIf(motion -> motion.getPiece().getState() == PieceState.CAPTURED);
+
+        // Ages only rests that were already running before this tick; any rest that starts later
+        // in this same call (via resolving an arrival below) begins fresh, unaffected by ms already
+        // spent advancing everyone else's clocks this tick.
+        restTracker.advance(ms);
 
         for (Motion motion : activeMotions) {
             motion.addTime(ms);
@@ -171,8 +218,9 @@ public class RealTimeArbiter {
                 continue;
             }
 
-            // No enemy arrived during the window; the piece just settles back to IDLE in place.
-            piece.setState(PieceState.IDLE);
+            // No enemy arrived during the window; the piece settles into a short rest in place.
+            piece.setState(PieceState.SHORT_REST);
+            restTracker.begin(piece, GameConfig.SHORT_REST_DURATION_MS);
             iterator.remove();
         }
     }

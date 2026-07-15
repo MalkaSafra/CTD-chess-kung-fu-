@@ -62,6 +62,10 @@ public final class Controller {
         engine.waitClock(ms);
     }
 
+    public Position getSelectedPosition() {
+        return selectedCell;
+    }
+
     public void printBoard() {
         output.accept(BoardPrinter.format(engine.getBoard()));
     }

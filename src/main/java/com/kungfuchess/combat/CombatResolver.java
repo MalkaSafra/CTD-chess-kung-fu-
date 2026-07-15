@@ -1,12 +1,12 @@
 package com.kungfuchess.combat;
 
+import com.kungfuchess.config.GameConfig;
 import com.kungfuchess.model.Board;
 import com.kungfuchess.model.Piece;
 import com.kungfuchess.model.PieceKind;
 import com.kungfuchess.model.PieceState;
 import com.kungfuchess.model.Position;
 import com.kungfuchess.rules.PieceRules;
-import com.kungfuchess.rules.PromotionRule;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +29,14 @@ import java.util.List;
  * </ul>
  */
 public final class CombatResolver {
+
+    private final RestTracker restTracker;
+    private final CaptureLedger captureLedger;
+
+    public CombatResolver(RestTracker restTracker, CaptureLedger captureLedger) {
+        this.restTracker = restTracker;
+        this.captureLedger = captureLedger;
+    }
 
     /** One piece's pending arrival at a destination: where it came from, who it is, and how much
      * time elapsed past its own finish line this tick (smaller means it arrived more recently). */
@@ -108,7 +116,7 @@ public final class CombatResolver {
             piece.setPosition(stopAt);
             board.addPiece(piece);
         }
-        piece.setState(PieceState.IDLE);
+        enterLongRest(piece);
     }
 
     private boolean resolveAgainstAirborneDefender(Board board, List<Arrival> arrivals, Piece defender) {
@@ -205,11 +213,14 @@ public final class CombatResolver {
 
         mover.setPosition(destination);
         board.addPiece(mover);
-        mover.setState(PieceState.IDLE);
-
-        PromotionRule.apply(board, mover, destination);
+        enterLongRest(mover);
 
         return kingCaptured;
+    }
+
+    private void enterLongRest(Piece piece) {
+        piece.setState(PieceState.LONG_REST);
+        restTracker.begin(piece, GameConfig.LONG_REST_DURATION_MS);
     }
 
     private void stopOneSquareShort(Board board, Piece mover, Position source, Position collisionPoint) {
@@ -221,6 +232,7 @@ public final class CombatResolver {
     private boolean captureAt(Board board, Piece piece, Position position) {
         board.removePiece(position);
         piece.setState(PieceState.CAPTURED);
+        captureLedger.recordCapture(piece);
         return piece.getKind() == PieceKind.KING;
     }
 }

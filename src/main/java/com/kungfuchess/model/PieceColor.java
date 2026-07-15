@@ -14,6 +14,10 @@ public enum PieceColor {
         return code;
     }
 
+    public PieceColor opposite() {
+        return this == WHITE ? BLACK : WHITE;
+    }
+
     public static PieceColor fromCode(char c) {
         char lower = Character.toLowerCase(c);
         for (PieceColor color : values()) {

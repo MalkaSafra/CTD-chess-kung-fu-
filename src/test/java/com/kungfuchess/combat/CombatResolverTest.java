@@ -25,7 +25,7 @@ class CombatResolverTest {
     @BeforeEach
     void setUp() {
         board = new Board(8, 8);
-        combatResolver = new CombatResolver();
+        combatResolver = new CombatResolver(new RestTracker(), new CaptureLedger());
     }
 
     @Test
@@ -43,7 +43,7 @@ class CombatResolverTest {
         assertFalse(kingCaptured);
         assertEquals(lateBlack, board.getPiece(destination));
         assertEquals(PieceState.CAPTURED, earlyWhite.getState());
-        assertEquals(PieceState.IDLE, lateBlack.getState());
+        assertEquals(PieceState.LONG_REST, lateBlack.getState());
         assertNull(board.getPiece(new Position(4, 0)));
     }
 
@@ -89,7 +89,7 @@ class CombatResolverTest {
         assertEquals(mover, board.getPiece(new Position(4, 2)), "mover should stop one square short of its ally");
         assertEquals(friendlyDefender, board.getPiece(new Position(4, 3)), "the blocking ally is untouched");
         assertNull(board.getPiece(new Position(4, 0)));
-        assertEquals(PieceState.IDLE, mover.getState());
+        assertEquals(PieceState.LONG_REST, mover.getState());
     }
 
     @Test
@@ -116,7 +116,7 @@ class CombatResolverTest {
         combatResolver.resolveArrival(board, mover.getPosition(), new Position(4, 4), mover);
 
         assertEquals(mover, board.getPiece(new Position(4, 3)));
-        assertEquals(PieceState.IDLE, mover.getState());
+        assertEquals(PieceState.LONG_REST, mover.getState());
         assertEquals(jumper, board.getPiece(new Position(4, 4)));
     }
 
