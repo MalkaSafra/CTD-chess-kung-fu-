@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.kungfuchess</groupId>
+    <artifactId>kungfu-chess</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>client</artifactId>
+  <packaging>jar</packaging>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.kungfuchess</groupId>
+      <artifactId>engine</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <!-- STOMP client, not full Spring Boot (this is a plain Swing app, not a Spring app).
+         Versions come from the root pom's spring-boot-dependencies BOM import, so the client
+         and server always agree on compatible Spring/Jackson versions. -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-websocket</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-messaging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <!-- StandardWebSocketClient needs an actual jakarta.websocket client implementation on the
+         classpath; this is the same one the server's embedded Tomcat already provides there. -->
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-websocket</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!-- Same reason as exec-maven-plugin below: tests load sprites/board art via
+               relative filesystem paths resolved against the repo root. -->
+          <workingDirectory>${project.basedir}/..</workingDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
+        <!-- Lets `mvn -pl client exec:java` launch GuiMain. workingDirectory is pinned to
+             the repo root because GuiMain loads sprites/board art via plain relative
+             filesystem paths (e.g. "pieces_classic"), not classpath resources. -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <mainClass>com.kungfuchess.app.GuiMain</mainClass>
+          <workingDirectory>${project.basedir}/..</workingDirectory>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
